@@ -1,0 +1,25 @@
+<div class="card my-3 p-3">
+    <h4>@SafeName</h4>
+
+    <label>اسم الفعالية</label>
+    <input class="form-control mb-2" @bind="EventName" @bind:after="NotifyChanged" />
+
+    <p><strong>التاريخ:</strong> @EventDate</p>
+    <p><strong>المكان:</strong> @EventLocation</p>
+    <NavLink href="@($"/events/{EventId}")" class="btn btn-primary btn-sm">عرض التفاصيل</NavLink>
+</div>
+
+@code {
+    [Parameter] public int EventId { get; set; }
+    [Parameter] public string EventName { get; set; } = "";
+    [Parameter] public EventCallback<string> EventNameChanged { get; set; }
+    [Parameter] public string EventDate { get; set; } = "";
+    [Parameter] public string EventLocation { get; set; } = "";
+
+    private string SafeName => string.IsNullOrWhiteSpace(EventName) ? "بدون اسم" : EventName;
+
+    private async Task NotifyChanged()
+    {
+        await EventNameChanged.InvokeAsync(EventName);
+    }
+}

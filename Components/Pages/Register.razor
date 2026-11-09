@@ -1,0 +1,61 @@
+@using System.ComponentModel.DataAnnotations
+@page "/register"
+@inject EventManagement.Services.UserSession Session
+
+<PageTitle>التسجيل</PageTitle>
+
+<h1>تسجيل في الفعالية</h1>
+
+<EditForm Model="model" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" />
+
+    <div class="mb-3">
+        <label for="full-name">الاسم الكامل</label>
+        <InputText id="full-name" class="form-control" @bind-Value="model.FullName" @bind-Value:after="ResetSubmissionStatus" />
+        <ValidationMessage For="() => model.FullName" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email">البريد الإلكتروني</label>
+        <InputText id="email" class="form-control" @bind-Value="model.Email" @bind-Value:after="ResetSubmissionStatus" />
+        <ValidationMessage For="() => model.Email" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">سجّل</button>
+</EditForm>
+
+@if (submitted)
+{
+    <div class="alert alert-success mt-3" role="status">تم التسجيل بنجاح، أهلاً @model.FullName!</div>
+}
+
+<br />
+<NavLink href="/events">رجوع للفعاليات</NavLink>
+
+@code {
+    private RegistrationModel model = new();
+    private bool submitted;
+
+    private void HandleValidSubmit()
+    {
+        Session.Register(model.FullName);
+        submitted = true;
+    }
+
+    private void ResetSubmissionStatus()
+    {
+        submitted = false;
+    }
+
+    public class RegistrationModel
+    {
+        [Required(ErrorMessage = "الاسم مطلوب")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "الاسم بين 3 و50 حرف")]
+        public string FullName { get; set; } = "";
+
+        [Required(ErrorMessage = "الإيميل مطلوب")]
+        [EmailAddress(ErrorMessage = "الإيميل غير صالح")]
+        public string Email { get; set; } = "";
+    }
+}

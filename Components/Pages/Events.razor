@@ -1,0 +1,15 @@
+@page "/events"
+
+<PageTitle>الفعاليات</PageTitle>
+
+<h1>قائمة الفعاليات</h1>
+
+<EventCard EventId="1" @bind-EventName="eventName1" EventDate="15 ديسمبر 2026" EventLocation="عمّان" />
+<EventCard EventId="2" @bind-EventName="eventName2" EventDate="20 ديسمبر 2026" EventLocation="إربد" />
+
+<p>الاسم الحالي للفعالية الأولى: @eventName1</p>
+
+@code {
+    private string eventName1 = "مؤتمر Blazor";
+    private string eventName2 = "ورشة تصميم الواجهات";
+}
